@@ -6,15 +6,19 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DestinationDataset_fcp",
+						"referenceName": "SourceDataset_fcp",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tformat: 'document',\n\tsystemColumns: true) ~> source1"
+			"transformations": [
+				{
+					"name": "Select1"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource1 select(partitionBy('hash', 1),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Select1"
 		}
 	}
 }
